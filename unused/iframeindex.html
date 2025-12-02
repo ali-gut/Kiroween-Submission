@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Witch Chat Interface - Iframe SDK</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        /* Complete isolation - SDK in separate layer */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* SDK Layer - Completely isolated */
+        .sidebar-left {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            width: calc(33.33vw - 40px);
+            height: 90vh;
+            padding: 0;
+            z-index: 1;
+            isolation: isolate;
+        }
+
+        .sdk-iframe-container {
+            background: white;
+            padding: 0;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .sdk-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+
+        /* Witch Layer - Separate from SDK */
+        .main-content {
+            position: absolute;
+            left: calc(33.33vw + 20px);
+            top: 20px;
+            width: calc(33.33vw - 40px);
+            height: 90vh;
+            z-index: 2;
+            isolation: isolate;
+        }
+
+        /* Right sidebar - Separate layer */
+        .sidebar-right {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: 400px;
+            height: 90vh;
+            z-index: 3;
+            isolation: isolate;
+        }
+
+        .rightbar-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Chat iframe overlay */
+        .chat-iframe {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            height: 400px;
+            border: none;
+            pointer-events: auto;
+            z-index: 100;
+            background: transparent;
+        }
+    </style>
+</head>
+<body>
+    <audio autoplay loop>
+        <source src="scarymusic.mp3" type="audio/mpeg">
+    </audio>
+    <div class="container">
+        <!-- Left Sidebar - SDK in Iframe with Shadow DOM -->
+        <aside class="sidebar-left" id="sdkContainer"></aside>
+
+        <!-- Main Content - Witch and Chat -->
+        <main class="main-content">
+            <div class="witch-container">
+                <img src="witch asset.jpg" alt="Witch with crystal ball" class="witch-image">
+                <iframe src="chat-iframe.html" class="chat-iframe" title="Chat"></iframe>
+            </div>
+        </main>
+
+        <!-- Right Sidebar - Offerings and Thoughts -->
+        <aside class="sidebar-right">
+            <iframe src="rightbar.html" class="rightbar-iframe" title="Right Sidebar"></iframe>
+        </aside>
+    </div>
+
+
+    <!-- Mobile View - After Interaction -->
+    <div class="mobile-view">
+        <div class="mobile-header">
+            <img src="witch asset.jpg" alt="Witch" class="mobile-witch">
+            <div class="mobile-info">
+                <h2>bla bla bla</h2>
+                <p class="code-text">code:<br>bla bla bla</p>
+            </div>
+        </div>
+
+        <div class="mobile-participants">
+            <div class="participant-small">Peserta videall</div>
+            <div class="participant-small">Peserta videall</div>
+            <div class="participant-small">Peserta videall</div>
+        </div>
+
+        <div class="mobile-chat">
+            <p class="chat-message">Aid grantee to the witch of barbarism</p>
+        </div>
+
+        <div class="mobile-input">
+            <h3>Page Thoughts:</h3>
+            <input type="text" placeholder="Bla.code.Xnui.oso" class="thought-input">
+            <input type="text" placeholder="Cite: https://en.X.Y.mics_mi
+tu.org" class="cite-input">
+            <div class="request-box">
+                <p>request history dari semua peserta masuk kesini</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        console.log('Script started');
+
+        // Unregister old Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistrations().then(registrations => {
+                registrations.forEach(registration => {
+                    registration.unregister();
+                    console.log('Unregistered old Service Worker');
+                });
+            });
+        }
+
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initAll);
+        } else {
+            initAll();
+        }
+
+        function initAll() {
+            console.log('Initializing all components...');
+            initSDK();
+            initMusic();
+        }
+
+        function initSDK() {
+            // Create SDK in Shadow DOM for complete isolation
+            const sdkContainer = document.getElementById('sdkContainer');
+            if (!sdkContainer) {
+                console.error('SDK container not found!');
+                return;
+            }
+            const shadow = sdkContainer.attachShadow({ mode: 'open' });
+        
+        // Add styles to shadow DOM
+        const style = document.createElement('style');
+        style.textContent = `
+            .sdk-iframe-container {
+                background: white;
+                padding: 0;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+                height: 100%;
+                width: 100%;
+                overflow: hidden;
+            }
+            .sdk-iframe {
+                width: 100%;
+                height: 100%;
+                border: none;
+                border-radius: 8px;
+            }
+        `;
+            shadow.appendChild(style);
+            
+            // Add iframe to shadow DOM
+            const sdkDiv = document.createElement('div');
+            sdkDiv.className = 'sdk-iframe-container';
+            const iframe = document.createElement('iframe');
+            iframe.src = 'hackathon.html';
+            iframe.className = 'sdk-iframe';
+            iframe.title = 'LintasEdu SDK';
+            sdkDiv.appendChild(iframe);
+            shadow.appendChild(sdkDiv);
+            console.log('SDK initialized');
+        }
+
+        function initMusic() {
+            // Auto-play music on first user interaction
+            const audio = document.querySelector('audio');
+            if (!audio) return;
+            
+            const playMusic = () => {
+                audio.play().catch(e => console.log('Audio play failed:', e));
+                document.removeEventListener('click', playMusic);
+                document.removeEventListener('keydown', playMusic);
+            };
+            document.addEventListener('click', playMusic);
+            document.addEventListener('keydown', playMusic);
+            console.log('Music initialized');
+        }
+    </script>
+</body>
+</html>

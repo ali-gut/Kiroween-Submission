@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            background: transparent;
+        }
+
+        .offerings-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            height: 30vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .thoughts-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            height: calc(60vh - 20px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .offerings-card h3,
+        .thoughts-card h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .file-list {
+            margin-bottom: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            min-height: 50px;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            margin-bottom: 5px;
+            background: #f5f5f5;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .file-item:hover {
+            background: #e8e8e8;
+        }
+
+        .file-name {
+            font-size: 13px;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: #333;
+        }
+
+        .delete-icon {
+            cursor: pointer;
+            font-size: 18px;
+            margin-left: 10px;
+            opacity: 0.5;
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .delete-icon:hover {
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .offer-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .offer-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .offer-button:active {
+            transform: translateY(0);
+        }
+
+        .skull-emoji {
+            font-size: 24px;
+        }
+
+        .thought-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .thoughts-messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f9f9f9;
+            border-radius: 6px;
+            max-height: calc(60vh - 120px);
+        }
+
+        .thought-bubble {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-size: 12px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .thought-bubble strong {
+            color: #667eea;
+            font-size: 11px;
+        }
+
+        .thoughts-input-form {
+            display: flex;
+            gap: 8px;
+            background: white;
+            padding: 8px;
+            border-radius: 15px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .thought-text-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 6px 10px;
+            font-size: 12px;
+            font-family: 'Georgia', serif;
+            min-height: 16px;
+            max-height: 60px;
+            overflow-y: auto;
+        }
+
+        .thought-text-input:empty:before {
+            content: attr(data-placeholder);
+            color: #999;
+        }
+
+        .thought-send-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.2s;
+        }
+
+        .thought-send-btn:hover {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="offerings-card">
+        <h3>Offerings to the witch:</h3>
+        <div id="fileList" class="file-list"></div>
+        <input type="file" id="fileInput" style="display: none;" accept=".pdf,.txt,.doc,.docx" multiple>
+        <button id="uploadBtn" class="offer-button">
+            <span class="skull-emoji">💀</span>
+            <span>Offer to Witch</span>
+        </button>
+    </div>
+
+    <div class="thoughts-card">
+        <h3>Page Thoughts:</h3>
+        <div class="thoughts-messages" id="thoughtsMessages"></div>
+        <div class="thoughts-input-form">
+            <div contenteditable="true" id="thoughtInput" class="thought-text-input" data-placeholder="Share thoughts with everyone..."></div>
+            <button type="button" id="thoughtSendBtn" class="thought-send-btn">💭</button>
+        </div>
+    </div>
+
+    <script>
+        console.log('Rightbar initialized');
+        
+        const fileInput = document.getElementById('fileInput');
+        const fileList = document.getElementById('fileList');
+        const uploadBtn = document.getElementById('uploadBtn');
+        
+        let uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles') || '[]');
+        console.log('Loaded files from storage:', uploadedFiles.length);
+        
+        uploadBtn.addEventListener('click', () => {
+            console.log('Upload button clicked!');
+            fileInput.click();
+        });
+
+        function displayFiles() {
+            fileList.innerHTML = uploadedFiles.map((file, index) => `
+                <div class="file-item">
+                    <span class="file-name">${file.name}</span>
+                    <span class="delete-icon" onclick="deleteFile(${index})" title="Delete">🪦</span>
+                </div>
+            `).join('');
+            console.log(`Displaying ${uploadedFiles.length} files`);
+        }
+
+        window.deleteFile = async function(index) {
+            uploadedFiles.splice(index, 1);
+            localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+            
+            try {
+                await fetch('http://localhost:5000/upload_context', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ files: uploadedFiles })
+                });
+            } catch (error) {
+                console.error('Failed to update context:', error);
+            }
+            
+            displayFiles();
+        };
+
+        fileInput.addEventListener('change', async (e) => {
+            console.log('File input changed!', e.target.files.length, 'files');
+            const files = Array.from(e.target.files);
+            
+            for (const file of files) {
+                console.log('Processing file:', file.name);
+                const reader = new FileReader();
+                reader.onload = async (event) => {
+                    const content = event.target.result;
+                    const fileData = {
+                        name: file.name,
+                        content: content,
+                        type: file.type,
+                        size: file.size
+                    };
+                    
+                    uploadedFiles.push(fileData);
+                    localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
+                    
+                    try {
+                        await fetch('http://localhost:5000/upload_context', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ files: uploadedFiles })
+                        });
+                        console.log('Saved to server');
+                    } catch (error) {
+                        console.error('Failed to save context:', error);
+                    }
+                    
+                    displayFiles();
+                    console.log(`Uploaded: ${file.name}`);
+                };
+                
+                // Read PDF as base64, text files as text
+                if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+                    reader.readAsDataURL(file);
+                } else {
+                    reader.readAsText(file);
+                }
+            }
+            
+            fileInput.value = '';
+        });
+
+        displayFiles();
+        console.log('File upload system initialized');
+
+        // Shared Thoughts Chat System
+        const thoughtsMessages = document.getElementById('thoughtsMessages');
+        const thoughtInput = document.getElementById('thoughtInput');
+        const thoughtSendBtn = document.getElementById('thoughtSendBtn');
+
+        let pollInterval = null;
+
+        // Load thoughts from server
+        async function loadThoughts() {
+            try {
+                const response = await fetch('http://localhost:5000/get_thoughts');
+                const data = await response.json();
+                
+                thoughtsMessages.innerHTML = '';
+                data.thoughts.forEach(thought => {
+                    const bubble = document.createElement('div');
+                    bubble.className = 'thought-bubble';
+                    bubble.innerHTML = `<strong>User:</strong> ${thought.message}`;
+                    thoughtsMessages.appendChild(bubble);
+                });
+                
+                thoughtsMessages.scrollTop = thoughtsMessages.scrollHeight;
+            } catch (error) {
+                console.error('Failed to load thoughts:', error);
+            }
+        }
+
+        // Send thought to server
+        async function sendThought() {
+            const message = thoughtInput.textContent.trim();
+            thoughtInput.textContent = '';
+            
+            if (message) {
+                try {
+                    await fetch('http://localhost:5000/add_thought', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ message })
+                    });
+                    
+                    loadThoughts();
+                } catch (error) {
+                    console.error('Failed to send thought:', error);
+                }
+            }
+        }
+
+        thoughtSendBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            sendThought();
+        });
+
+        thoughtInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendThought();
+            }
+        });
+
+        // Poll for new thoughts every 2 seconds
+        loadThoughts();
+        pollInterval = setInterval(loadThoughts, 2000);
+
+        console.log('Thoughts chat system initialized');
+    </script>
+</body>
+</html>
