@@ -353,4 +353,5 @@ This project is provided as-is for educational and hackathon purposes.
 ---
 
 **Built with Kiro🎃 for hackathon collaboration**
+
 <pre>
