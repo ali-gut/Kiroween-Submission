@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LintasEdu SDK Login</title>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f9fc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .button {
+      background-color: #007bff;
+      color: white;
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: #0056b3;
+    }
+
+    i {
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+
+  <center>
+    <button onclick="loadLintasEduLogin()" class="button" aria-label="Mulai Sesi Interaktif">
+      <i class="fas fa-video"></i>
+      Hubungi Kami
+    </button>
+  </center>
+
+  <script>
+    const SDK_URL = 'https://api.lintasedu.com/sdk.js';
+    const API_KEY = '9b73dc03-0e4d-4374-a7ca-39ea84153a7e';
+    const API_SECRET = '13827aa8-1d5e-454c-8896-c21c6a292d52';
+
+    function loadLintasEduLogin() {
+      // If SDK already loaded
+      if (window.LoadLintasEduSDK) {
+        console.log("LintasEdu SDK already loaded.");
+        window.LoadLintasEduSDK();
+        return;
+      }
+
+      // Prevent multiple script loads
+      if (document.getElementById('lintas-edu-sdk-script')) {
+        console.log("SDK script is already being loaded.");
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.id = 'lintas-edu-sdk-script';
+      script.src = SDK_URL;
+      script.setAttribute('data-api-key', API_KEY);
+      script.setAttribute('data-api-secret', API_SECRET);
+
+      script.onload = function() {
+        console.log("LintasEdu SDK loaded successfully.");
+        if (window.LoadLintasEduSDK) {
+          window.LoadLintasEduSDK();
+        } else {
+          console.error("LintasEdu SDK failed to initialize.");
+        }
+      };
+
+      script.onerror = function() {
+        console.error("Failed to load LintasEdu SDK from:", SDK_URL);
+      };
+
+      document.body.appendChild(script);
+    }
+  </script>
+
+</body>
+</html>
