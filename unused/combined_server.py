@@ -16,7 +16,7 @@ except ImportError:
     print("Warning: pypdf not installed. PDF reading will be limited.")
 
 # Configure Google Gemini API
-client = genai.Client(api_key='AIzaSyA-hvrLKoYItByTN3-SAsrftMLZvdkP7LA')
+client = genai.Client(api_key='inserAPIiguess')
 
 # File to store messages and context
 MESSAGES_FILE = 'messages.json'
@@ -386,3 +386,4 @@ if __name__ == '__main__':
     print("- HTTP on port 5000 (file uploads)")
     print("- WebSocket on port 8765 (chat)")
     asyncio.run(main())
+
