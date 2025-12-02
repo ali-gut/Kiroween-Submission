@@ -14,7 +14,7 @@ Witch Chat Interface is a collaborative AI assistant platform where multiple use
 - Conduct video calls via integrated LintasEdu SDK
 - Experience a mystical, Halloween-themed interface
 
-Dear Judges, please visit 'https://kiro.lintasedu.com//client.html' for easier access to our demo (fully working). 
+Dear Judges, please visit 'https://kiro.lintasedu.com//client.html' for easier access to our demo (fully working) 
 using the website above will save you from the hassle of setting up py dependency and changing config.js and .env to localhost.
 use https://kiro.lintasedu.com if the first link did not work.
 
@@ -355,3 +355,4 @@ This project is provided as-is for educational and hackathon purposes.
 **Built with Kiro🎃 for hackathon collaboration**
 
 <pre>
+
