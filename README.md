@@ -1,6 +1,7 @@
 <pre>
 # Witch Chat Interface - AI-Powered Multi-Client Chat Application
 
+AFTER CLONE, DELETE THE '-' in front of .kiro and other kiro workfolders so kiro can use them.
 ALL ASSETS ARE AI GENERATED AND ANY RESEMBLANCE ARE COINCIDENCE
 MUSIC USED IS NOT COPYRIGHTED 
 A mystical-themed, real-time AI chat application with video call integration, document context awareness, and multi-client collaboration features.
@@ -355,5 +356,6 @@ This project is provided as-is for educational and hackathon purposes.
 **Built with Kiro🎃 for hackathon collaboration**
 
 <pre>
+
 
 
